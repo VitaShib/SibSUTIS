@@ -52,3 +52,28 @@ int SolveEquation (double a, double b, double c, double *x1, double *x2)
 	}
 	return -1;						// Заглушка
 }
+
+int main (int argc, char *argv[])
+{
+	double a, b, c, x1, x2;
+	
+	printf ("Введите коэффициенты квадратичного уравнения (a, b, c): ");
+	scanf ("%lf %lf %lf", &a, &b, &c);
+	
+	switch (SolveEquation (a, b, c, &x1, &x2))
+	{
+		case NO_ROOT:
+			printf ("\tУравнение не имеет корней\n");
+			break;
+		case ONE_ROOT:
+			printf ("\tНайден один корень: x = %lf\n", x1);
+			break;
+		case TWO_ROOTS:
+			printf ("\tНайдены два корня: x1 = %lf и x2 = %lf\n", x1, x2);
+			break;
+		case ENDLESS_ROOTS:
+			printf ("\nУравнение имеет бесконечное множество корней\n");
+			break;
+	}
+	return 0;
+}
