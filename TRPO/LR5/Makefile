@@ -2,8 +2,6 @@
 
 all: bin/tester2 bin/QuadraticEquation
 
-remake: clean all
-
 bin/QuadraticEquation: obj/main.o obj/calc.o
 	mkdir -p bin
 	gcc obj/main.o obj/calc.o -o bin/QuadraticEquation -lm
@@ -25,6 +23,8 @@ obj/tester.o: test/tester2.c test/mytests.c
 
 bin/tester2: obj/calc.o obj/tester.o
 	gcc obj/calc.o obj/tester.o -o bin/tester2 -lm
+
+remake: clean all
 
 clean:
 	rm obj/*.o bin/*

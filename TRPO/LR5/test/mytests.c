@@ -24,7 +24,53 @@ CTEST(NormalValue, twoRoots)
 	ASSERT_EQUAL(RES, TWO_ROOTS);
 	ASSERT_DBL_NEAR(OK_x1, x1);
 	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
 }
+
+CTEST(NormalValue, twoRootsCE0)
+{
+	double a = 2;
+	double b = 4;
+	double c = 0;
+
+	double x1;
+	double x2;
+	int RES;
+
+	RES = SolveEquation(a, b, c, &x1, &x2);
+
+	const double OK_x1 = -2;
+	const double OK_x2 = 0;
+
+	ASSERT_EQUAL(RES, TWO_ROOTS);
+	ASSERT_DBL_NEAR(OK_x1, x1);
+	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
+}
+
+CTEST(NormalValue, oneRootAE0)
+{
+	double a = 0;
+	double b = 2;
+	double c = 4;
+
+	double x1;
+	double x2;
+	int RES;
+
+	RES = SolveEquation(a, b, c, &x1, &x2);
+
+	const double OK_x1 = -2;
+	const double OK_x2 = 0;
+
+	ASSERT_EQUAL(RES, ONE_ROOT);
+	ASSERT_DBL_NEAR(OK_x1, x1);
+	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
+}
+
+
+
 
 CTEST(NormalValue, oneRoot)
 {
@@ -44,6 +90,7 @@ CTEST(NormalValue, oneRoot)
 	ASSERT_EQUAL(RES, ONE_ROOT);
 	ASSERT_DBL_NEAR(OK_x1, x1);
 	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
 }
 
 CTEST(NormalValue, noRoots)
@@ -64,6 +111,7 @@ CTEST(NormalValue, noRoots)
 	ASSERT_EQUAL(RES, NO_ROOT);
 	ASSERT_DBL_NEAR(OK_x1, x1);
 	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
 }
 
 CTEST(NormalValue, Endless_roots)
@@ -84,4 +132,5 @@ CTEST(NormalValue, Endless_roots)
 	ASSERT_EQUAL(RES, ENDLESS_ROOTS);
 	ASSERT_DBL_NEAR(OK_x1, x1);
 	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
 }
