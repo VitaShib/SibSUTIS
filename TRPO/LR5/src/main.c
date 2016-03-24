@@ -18,7 +18,9 @@ int main (int argc, char *argv[])
 
 		//Проверка данных
 //		if ((a==0)&&(argv[1][0]!='0'))
-		if ((a==0)&&(strcmp(argv[1], "0")) || (b==0)&&(strcmp(argv[2], "0")) || (c==0)&&(strcmp(argv[3], "0")))
+//		if ((a==0)&&(strcmp(argv[1], "0")) || (b==0)&&(strcmp(argv[2], "0")) || (c==0)&&(strcmp(argv[3], "0")))
+		if (((a==0)&&(strcmp(argv[1], "0"))) || ((b==0)&&(strcmp(argv[2], "0"))) || ((c==0)&&(strcmp(argv[3], "0"))))
+
 		{
 			printf("\tОшибка ввода данных\n");
 			return 1;

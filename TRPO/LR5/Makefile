@@ -14,15 +14,11 @@ obj/calc.o: src/calc.c
 	mkdir -p obj
 	gcc -c src/calc.c -o obj/calc.o
 
-obj/calc.o: src/calc.c
-	mkdir -p obj
-	gcc -c src/calc.c -o obj/calc.o
-
-obj/tester.o: test/tester2.c test/mytests.c
+obj/tester.o: test/tester2.c
 	gcc -c test/tester2.c -o obj/tester.o
 
 bin/tester2: obj/calc.o obj/tester.o
-	gcc obj/calc.o obj/tester.o -o bin/tester2 -lm
+	gcc obj/calc.o obj/tester.o -o bin/tester2 -lm -Wall
 
 remake: clean all
 
