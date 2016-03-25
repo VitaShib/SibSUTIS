@@ -25,3 +25,5 @@ remake: clean all
 clean:
 	rm obj/*.o bin/*
 
+RUNTest: bin/tester2
+	bin/tester2
