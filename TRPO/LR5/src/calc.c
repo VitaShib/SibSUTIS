@@ -44,7 +44,7 @@ int SolveEquation (double a, double b, double c, double *x1, double *x2)
 		if (IsLessZero (d))
 			return NO_ROOT;
 	}
-	return -1;						// Заглушка
+//	return -1;						// Заглушка
 }
 
 void fCalc(double a, double b, double c, char *MAS)
