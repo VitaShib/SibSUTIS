@@ -41,8 +41,8 @@ int SolveEquation (double a, double b, double c, double *x1, double *x2)
 			return TWO_ROOTS;
 		}
 		
-		if (IsLessZero (d))
-			return NO_ROOT;
+	//	if (IsLessZero (d))
+		return NO_ROOT;
 	}
 //	return -1;						// Заглушка
 }
