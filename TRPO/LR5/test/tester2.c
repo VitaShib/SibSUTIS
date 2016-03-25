@@ -2,6 +2,7 @@
 
 #include "./external/ctest.h"
 #include "../src/consts.h"
+#include "../src/calc.h"
 
 CTEST(NormalValue, twoRoots)
 {
