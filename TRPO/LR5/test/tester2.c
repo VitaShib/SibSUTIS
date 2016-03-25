@@ -65,8 +65,27 @@ CTEST(NormalValue, oneRootAE0)
 	ASSERT_DBL_NEAR(OK_x2, x2);
 	ASSERT_NOT_EQUAL(RES, -1);
 }
+//TODO
+CTEST(NormalValue, NoRootAE0aBE0)
+{
+	double a = 0;
+	double b = 0;
+	double c = 1;
 
+	double x1;
+	double x2;
+	int RES;
 
+	RES = SolveEquation(a, b, c, &x1, &x2);
+
+	const double OK_x1 = 0;
+	const double OK_x2 = 0;
+
+	ASSERT_EQUAL(RES, NO_ROOT);
+	ASSERT_DBL_NEAR(OK_x1, x1);
+	ASSERT_DBL_NEAR(OK_x2, x2);
+	ASSERT_NOT_EQUAL(RES, -1);
+}
 
 
 CTEST(NormalValue, oneRoot)

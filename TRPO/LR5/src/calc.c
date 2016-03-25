@@ -8,6 +8,8 @@ int SolveEquation (double a, double b, double c, double *x1, double *x2)
 	Функция нахождения корней квадратного уравнения
 */
 {
+	*x1 = 0;
+	*x2 = 0;
 	if (IsZero (a))
 		if (IsZero (b))					// Линейный коэффициент
 			if (IsZero (c))				// Константа
