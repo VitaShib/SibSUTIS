@@ -86,6 +86,8 @@ bstree.c (реализация функций) и bstree.h (объявление
 const int YES = 1, NO = 0;
 int main()
 {
+	char rs[100]= {' '};
+
 	uint32_t CountWord = 0, CountSpace = 0;
 	FILE* f;
 	// Попытка открыть файл
@@ -114,7 +116,8 @@ int main()
 			if (WLen)
 			{
 				out[WLen] = '\0';
-				printf("%s %d\n", out, WLen);
+				printf("%s %d ", out, WLen);
+				printf("cmp: %d\n", strncmp(out, rs, WLen-1));
 			}
 //
 
