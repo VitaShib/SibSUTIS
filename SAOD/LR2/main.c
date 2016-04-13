@@ -75,6 +75,7 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 
 //#include "bstree.h"
@@ -83,13 +84,15 @@ bstree.c (реализация функций) и bstree.h (объявление
 
 #define IFILE "input.txt"
 
-const int YES = 1, NO = 0;
-int main()
+char *Words[735316];
+
+void Read()
 {
-	char rs[100]= {' '};
+	char word[100]= {' '};
 
 	uint32_t CountWord = 0, CountSpace = 0;
 	FILE* f;
+	printf("\tЧтение файла: %s\n", IFILE);
 	// Попытка открыть файл
 	if((f = fopen(IFILE, "r")) == NULL)
 	{
@@ -97,27 +100,28 @@ int main()
 		perror("fopen");
 		exit(1);
 	}
-	printf("\tЧтение файла: %s\n", IFILE);
+	printf("\tФайл прочитан\n");
 
-
-	register int inWord = NO; // Почему не short int?
-	char c; // Было у Кернигана и Ритчи int
+	register int inWord = 0; // Почему не short int?
+	char c; // Было int
 
 	int WLen = 0;
-	char out[100] = {'\0'};
 
 	while((c = getc(f)) != EOF)
+	{
 		if(isspace(c) || c == '\n')
 		{
-			inWord = NO;
+			inWord = 0;
 			++CountSpace;
 
 //Для вывода
 			if (WLen)
 			{
-				out[WLen] = '\0';
-				printf("%s %d ", out, WLen);
-				printf("cmp: %d\n", strncmp(out, rs, WLen-1));
+				word[WLen] = '\0';
+			//	printf("%s %d ", word, WLen);
+			//	printf("cmp: %d\n", strncmp(word, word, WLen-1));
+				Words[CountWord - 1] = (char*)malloc(WLen * sizeof(char));
+				strcpy(Words[CountWord - 1], word);
 			}
 //
 
@@ -125,16 +129,41 @@ int main()
 		}
 		else
 		{
-			out[WLen] = c;
+			word[WLen] = c;
 			++WLen;
 
-			if(inWord == NO)
+			if(inWord == 0)
 			{
 
-				inWord = YES;
+				inWord = 1;
 				++CountWord;
 			}
 		}
-	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);
+	}
+	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
+}
+
+#define HASHTAB_MUL 31
+#define HASHTAB_SIZE 4736
+unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
+{
+	unsigned int h = 0;
+	char *p;
+	for (p = key; *p != '\0'; p++)
+	{
+		h = h * HASHTAB_MUL + (unsigned int)*p;
+	}
+	return h % HASHTAB_SIZE;
+}
+
+int main()
+{
+	
+	Read();
+	int i;
+	for (i=0; i<=20; i++)
+	{
+		printf("\t\t%s; %u\n", Words[i], KP_Hash(Words[i]));
+	}
 	return 0;
 }
