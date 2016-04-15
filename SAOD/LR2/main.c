@@ -77,14 +77,21 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <sys/time.h>
 
-//#include "bstree.h"
+#include "bstree.h"
 //#include "hashtab.h"
 
+double wtime()
+{
+	struct timeval t;
+	gettimeofday(&t, NULL);
+	return (double)t.tv_sec + (double)t.tv_usec * 1E-6;
+}
 
 #define IFILE "dic.list"
 
-char *Words[864088];
+char *Words[1259840];
 
 void Read()
 {
@@ -92,7 +99,7 @@ void Read()
 
 	uint32_t CountWord = 0, CountSpace = 0;
 	FILE* f;
-	printf("\tЧтение файла: %s\n", IFILE);
+	printf("\tОткрытие файла: %s\n", IFILE);
 	// Попытка открыть файл
 	if((f = fopen(IFILE, "r")) == NULL)
 	{
@@ -100,13 +107,14 @@ void Read()
 		perror("fopen");
 		exit(1);
 	}
-	printf("\tФайл прочитан\n");
+	printf("\tЧтение файла\n");
 
 	register int inWord = 0; // Почему не short int?
 	char c; // Было int
 
 	int WLen = 0;
-
+	double tN = 0;
+	tN = wtime();
 	while((c = getc(f)) != EOF)
 	{
 		if(isspace(c) || c == '\n')
@@ -140,7 +148,9 @@ void Read()
 			}
 		}
 	}
-	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
+	tN = wtime() - tN;
+	printf("\tФайл прочитан за %f сек. Содержит %d слов.\n", tN, CountWord);
+//	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
 }
 
 #define HASHTAB_MUL 31
@@ -159,7 +169,6 @@ unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
 
 int main()
 {
-	
 	Read();
 	int i;
 	for (i=0; i<=20; i++)
