@@ -82,9 +82,9 @@ bstree.c (реализация функций) и bstree.h (объявление
 //#include "hashtab.h"
 
 
-#define IFILE "input.txt"
+#define IFILE "dic.list"
 
-char *Words[735316];
+char *Words[864088];
 
 void Read()
 {
@@ -118,9 +118,9 @@ void Read()
 			if (WLen)
 			{
 				word[WLen] = '\0';
-			//	printf("%s %d ", word, WLen);
+			//	printf("%s %d\n", word, WLen);
 			//	printf("cmp: %d\n", strncmp(word, word, WLen-1));
-				Words[CountWord - 1] = (char*)malloc(WLen * sizeof(char));
+				Words[CountWord - 1] = (char*)malloc((WLen + 1) * sizeof(char));
 				strcpy(Words[CountWord - 1], word);
 			}
 //
@@ -155,6 +155,7 @@ unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
 	}
 	return h % HASHTAB_SIZE;
 }
+
 
 int main()
 {
