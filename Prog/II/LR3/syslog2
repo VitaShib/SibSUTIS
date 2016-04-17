@@ -1,0 +1,12 @@
+# Store critical stuff in critical
+#
+*.=crit;kern.none            /var/adm/critical
+              
+# Kernel messages are first, stored in the kernel
+# file, critical messages and higher ones also go
+# to another host and to the console
+#
+kern.*                       /var/adm/kernel
+kern.crit                    @finlandia
+kern.crit                    /dev/console
+kern.info;kern.!err          /var/adm/kernel-info
