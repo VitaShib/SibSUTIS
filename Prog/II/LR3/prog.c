@@ -52,11 +52,13 @@ II уровень сложности. Вариант 3
 
 #include "string.h"
 //#include "processing.h"
-//#include "input_output.h"
+#include "input_output.h"
 
 
 int main()
 {
+	input();
+
 	
 	return 0;
 }
