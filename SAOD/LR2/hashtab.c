@@ -116,10 +116,14 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, int mode)
 //        err = ERROR_MALLOC;
         return;
     }
-	node->next = hashtab[index];
-	node->key = key;
-	node->value = value;
-	hashtab[index] = node;
+//	node->next = hashtab[index];
+//	node->key = key;
+//	node->value = value;
+//	hashtab[index] = node;
+		node->key = key;
+		node->value = value;
+		node->next = hashtab[index];
+		hashtab[index] = node;
 }
 
 struct listnode *hashtab_lookup(struct listnode **hashtab, char *key, int mode)

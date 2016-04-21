@@ -79,7 +79,7 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include <stdint.h>
 #include <sys/time.h>
 
-//#include "bstree.h"
+#include "bstree.h"
 #include "hashtab.h"
 
 double wtime()
@@ -157,9 +157,24 @@ int main()
 {
 	Read();
 	int i;
-	for (i=0; i<=20; i++)
-	{
-		printf("\t\t%s; %u\n", Words[i], KP_Hash(Words[i]));
-	}
+
+	struct listnode *node;
+	hashtab_init(hashtab);
+	hashtab_add(hashtab, "123", 0, 0);
+//  	for (i = 0; i < 1259840 ; i++)
+ // 	{
+//		hashtab_add(hashtab, Words[i], i, 0);
+//	}
+	
+
+/*
+Mode:
+0:	FNV_Hash
+1:	KP_Hash
+2:	ADD_Hash
+3:	XOR_Hash
+4:	JENKINS_one_at_a_time_Hash
+*/
+
 	return 0;
 }
