@@ -79,8 +79,8 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include <stdint.h>
 #include <sys/time.h>
 
-#include "bstree.h"
-//#include "hashtab.h"
+//#include "bstree.h"
+#include "hashtab.h"
 
 double wtime()
 {
@@ -152,20 +152,6 @@ void Read()
 	printf("\tФайл прочитан за %f сек. Содержит %d слов.\n", tN, CountWord);
 //	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
 }
-
-#define HASHTAB_MUL 31
-#define HASHTAB_SIZE 4736
-unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
-{
-	unsigned int h = 0;
-	char *p;
-	for (p = key; *p != '\0'; p++)
-	{
-		h = h * HASHTAB_MUL + (unsigned int)*p;
-	}
-	return h % HASHTAB_SIZE;
-}
-
 
 int main()
 {

@@ -1,79 +1,9 @@
 #include "hashtab.h"
 
-#define HASHTAB_MUL 31
-#define HASHTAB_SIZE 128
-
-unsigned int hashtab_hash(char *key)  /* Реализация из лекции 6 */
-// Он же KPHash
+// Функции нахождения хешей
+unsigned FNV_Hash(void *key)
 {
-	unsigned int h = 0;
-	char *p;
-	for (p = key; *p != '\0'; p++)
-	{
-		h = h * HASHTAB_MUL + (unsigned int)*p;
-	}
-	return h % HASHTAB_SIZE;
-}
-
-void hashtab_init(struct listnode **hashtab)
-{
-	int i;
-	for (i = 0; i < HASHTAB_SIZE; i++)
-	{
-		hashtab[i] = NULL;
-	}
-}
-
-void hashtab_add(struct listnode **hashtab, char *key, int value)
-{
-	struct listnode *node;
-	int index = hashtab_hash(key);
-	// Вставка в начало списка
-	node = malloc(sizeof(*node));
-	if (node != NULL)
-	{
-		node->key = key;
-		node->value = value;
-		node->next = hashtab[index];
-		hashtab[index] = node;
-	}
-}
-
-struct listnode *hashtab_lookup(struct listnode **hashtab, char *key)
-{
-	int index;
-	struct listnode *node;
-	index = hashtab_hash(key);
-	for (node = hashtab[index]; node != NULL; node = node->next)
-	{
-		if (strcmp(node->key, key) == 0)
-			return node;
-	}
-	return NULL;
-}
-
-void hashtab_delete(struct listnode **hashtab, char *key)
-{
-	int index;
-	struct listnode *p, *prev = NULL;
-	index = hashtab_hash(key);
-	for (p = hashtab[index]; p != NULL; p = p->next)
-	{
-		if (strcmp(p->key, key) == 0)
-		{
-			if (prev == NULL
-				hashtab[index] = p->next;
-			else
-				prev->next = p->next;
-			free(p);
-			return;
-		}
-		prev = p;
-	}
-}
-
-unsigned FNV_Hash(void *key, int len)
-{
+	int len = strlen(key);
     unsigned char *p = key;
     unsigned h = 2166136261;
     int i;
@@ -86,7 +16,7 @@ unsigned FNV_Hash(void *key, int len)
     return h;
 }
 
-unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
+unsigned int KP_Hash(char *key)
 {
 	unsigned int h = 0;
 	char *p;
@@ -97,11 +27,9 @@ unsigned int KP_Hash(char *key)  /* Реализация из лекции 6 */
 	return h % HASHTAB_SIZE;
 }
 
-
-
-
-unsigned int ADD_Hash(void *key, int len)
+unsigned int ADD_Hash(void *key)
 {
+	int len = strlen(key);
     unsigned char *p = key;
     unsigned h = 0;
     int i;
@@ -114,8 +42,9 @@ unsigned int ADD_Hash(void *key, int len)
     return h;
 }
 
-unsigned int XOR_Hash(void *key, int len)
+unsigned int XOR_Hash(void *key)
 {
+	int len = strlen(key);
     unsigned char *p = key;
     unsigned h = 0;
     int i;
@@ -128,9 +57,10 @@ unsigned int XOR_Hash(void *key, int len)
     return h;
 }
 
-uint32_t JENKINS_one_at_a_time_Hash(char *key, size_t len)
+unsigned int JENKINS_one_at_a_time_Hash(char *key)
 {
-    uint32_t hash, i;
+	int len = strlen(key);
+    unsigned int hash, i;
     for(hash = i = 0; i < len; ++i)
     {
         hash += key[i];
@@ -141,4 +71,121 @@ uint32_t JENKINS_one_at_a_time_Hash(char *key, size_t len)
     hash ^= (hash >> 11);
     hash += (hash << 15);
     return hash;
+}
+// Функции нахождения хешей
+
+
+void hashtab_init(struct listnode **hashtab)
+{
+	int i;
+	for (i = 0; i < HASHTAB_SIZE; i++)
+	{
+		hashtab[i] = NULL;
+	}
+}
+
+void hashtab_add(struct listnode **hashtab, char *key, int value, int mode)
+{
+	struct listnode *node;
+	
+	unsigned int index;
+	
+	switch (mode)
+	{
+		case 0:
+			index = FNV_Hash(key);
+			break;
+		case 1:
+			index = KP_Hash(key);
+			break;
+		case 2:
+			index = ADD_Hash(key);
+			break;
+		case 3:
+			index = XOR_Hash(key);
+			break;
+		case 4:
+			index = JENKINS_one_at_a_time_Hash(key);
+			break;
+	}
+	
+	// Вставка в начало списка
+    node = malloc(sizeof(*node));
+    if (node == NULL)
+	{
+//        err = ERROR_MALLOC;
+        return;
+    }
+	node->next = hashtab[index];
+	node->key = key;
+	node->value = value;
+	hashtab[index] = node;
+}
+
+struct listnode *hashtab_lookup(struct listnode **hashtab, char *key, int mode)
+{
+	struct listnode *node;
+	unsigned int index;
+	switch (mode)
+	{
+		case 0:
+			index = FNV_Hash(key);
+			break;
+		case 1:
+			index = KP_Hash(key);
+			break;
+		case 2:
+			index = ADD_Hash(key);
+			break;
+		case 3:
+			index = XOR_Hash(key);
+			break;
+		case 4:
+			index = JENKINS_one_at_a_time_Hash(key);
+			break;
+	}
+	for (node = hashtab[index]; node != NULL; node = node->next)
+	{
+		if (strcmp(node->key, key) == 0)
+			return node;
+	}
+	return NULL;
+}
+
+void hashtab_delete(struct listnode **hashtab, char *key, int mode)
+{
+	struct listnode *p, *prev = NULL;
+	unsigned int index;
+	// Выбор функции хэширования строки
+	switch (mode)
+	{
+		case 0:
+			index = FNV_Hash(key);
+			break;
+		case 1:
+			index = KP_Hash(key);
+			break;
+		case 2:
+			index = ADD_Hash(key);
+			break;
+		case 3:
+			index = XOR_Hash(key);
+			break;
+		case 4:
+			index = JENKINS_one_at_a_time_Hash(key);
+			break;
+	}
+	for (p = hashtab[index]; p != NULL; p = p->next)
+	{
+		if (strcmp(p->key, key) == 0)
+		{
+			if (prev == NULL)
+				hashtab[index] = p->next;
+			else
+				prev->next = p->next;
+			free(p);
+			return;
+		}
+		prev = p;
+	}
 }
