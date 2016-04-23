@@ -90,8 +90,9 @@ double wtime()
 }
 
 #define IFILE "dic.list"
+#define WordsCount 1259840
 
-char *Words[1259840];
+char *Words[WordsCount];
 
 void Read()
 {
@@ -160,12 +161,17 @@ int main()
 
 	struct listnode *node;
 	hashtab_init(hashtab);
-	hashtab_add(hashtab, "123", 0, 0);
-//  	for (i = 0; i < 1259840 ; i++)
- // 	{
-//		hashtab_add(hashtab, Words[i], i, 0);
-//	}
-	
+
+	double tN = 0;
+	tN = wtime();
+
+	printf("\tСоздание хеш таблицы из %d элементов: ", WordsCount);
+  	for (i = 0; i < WordsCount ; i++)
+  	{
+		hashtab_add(hashtab, Words[i], i, 4);
+	}
+	tN = wtime() - tN;
+	printf("Создана за %f сек.\n", tN);
 
 /*
 Mode:
