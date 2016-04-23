@@ -92,10 +92,14 @@ double wtime()
 #define IFILE "dic.list"
 #define WordsCount 1259840
 
-char *Words[WordsCount];
+//char *Words[WordsCount];
 
-void Read()
+void Read(char **nWords)
 {
+	char *Words = nWords[0];
+	printf("\n%p\n", Words);
+//	printf("\n%p\n", &Words[1]);
+	
 	char word[100]= {' '};
 
 	uint32_t CountWord = 0, CountSpace = 0;
@@ -110,8 +114,8 @@ void Read()
 	}
 	printf("\tЧтение файла\n");
 
-	register int inWord = 0; // Почему не short int?
-	char c; // Было int
+	register int inWord = 0;
+	int c;
 
 	int WLen = 0;
 	double tN = 0;
@@ -129,7 +133,9 @@ void Read()
 				word[WLen] = '\0';
 			//	printf("%s %d\n", word, WLen);
 			//	printf("cmp: %d\n", strncmp(word, word, WLen-1));
+			
 				Words[CountWord - 1] = (char*)malloc((WLen + 1) * sizeof(char));
+			//	Words[CountWord - 1] = (char*)malloc((WLen + 1) * sizeof(char));
 				strcpy(Words[CountWord - 1], word);
 			}
 //
@@ -154,9 +160,21 @@ void Read()
 //	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
 }
 
+void expe1()
+{
+	
+}
+
 int main()
 {
-	Read();
+	char *Words;
+	Words = (char*)malloc(sizeof(Words)*WordsCount);
+	
+		printf("\n%p\n", Words);
+	Read(&Words);
+	
+	
+	
 	int i;
 
 	struct listnode *node;
