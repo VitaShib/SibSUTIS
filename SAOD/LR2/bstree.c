@@ -24,16 +24,17 @@ struct bstree *bstree_create(char *key, int value)//T Create = O(1)
 }
 
 /*Добавление элемента в BST*/
+
 void bstree_add(struct bstree *tree, char *key, int value)//T Add = O(h)
 {
 	int cmp;
 	struct bstree *parent, *node;
 	if (tree == NULL)
 		return;
-	/* Создаем элемент*/
+//	 Создаем элемент
 	node = bstree_create(key, value);
 
-	/* Отыскиваем листовой узел */
+//	 Отыскиваем листовой узел 
 	for (parent = tree; tree != NULL; )
 	{
 		parent = tree;
@@ -60,12 +61,14 @@ void bstree_add(struct bstree *tree, char *key, int value)//T Add = O(h)
 	}
 }
 
+
 /*Поиск элемента в BST*/
 struct bstree *bstree_lookup(struct bstree *tree, char *key)
 {
 	int cmp;
 	while (tree != NULL)
 	{
+
 		cmp = strcmp(key, tree->key);//TODO
 //		if (key == tree->key)
 		if (cmp == 0)
@@ -85,6 +88,7 @@ struct bstree *bstree_lookup(struct bstree *tree, char *key)
 	}
 	return tree;
 }
+
 
 /*Поиск минимального элемента в BST*/
 struct bstree *bstree_min(struct bstree *tree)

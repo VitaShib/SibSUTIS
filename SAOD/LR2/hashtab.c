@@ -42,7 +42,7 @@ unsigned int ADD_Hash(void *key)
     return h % HASHTAB_SIZE;
 }
 
-unsigned int XOR_Hash(void *key)
+unsigned int XOR_Hash(void *key) // Чоень плохая хеш функция
 {
 	int len = strlen(key);
     unsigned char *p = key;

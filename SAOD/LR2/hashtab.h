@@ -5,7 +5,14 @@
 #include <stdlib.h>
 
 #define HASHTAB_MUL 31
-#define HASHTAB_SIZE 128
+#define HASHTAB_SIZE 40960
+
+unsigned FNV_Hash(void *key);
+unsigned int KP_Hash(char *key);
+unsigned int ADD_Hash(void *key);
+unsigned int XOR_Hash(void *key);
+unsigned int JENKINS_one_at_a_time_Hash(char *key);
+
 
 struct listnode *hashtab[HASHTAB_SIZE];
 

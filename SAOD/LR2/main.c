@@ -92,12 +92,12 @@ double wtime()
 #define IFILE "dic.list"
 #define WordsCount 1259840
 
-//char *Words[WordsCount];
+char *Words[WordsCount];
 
-void Read(char **nWords)
+void Read()
 {
-	char *Words = nWords[0];
-	printf("\n%p\n", Words);
+//	char *Words = nWords[0];
+//	printf("\n%p\n", Words);
 //	printf("\n%p\n", &Words[1]);
 	
 	char word[100]= {' '};
@@ -160,37 +160,115 @@ void Read(char **nWords)
 //	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
 }
 
-void expe1()
+// Определение равномерности хеширования
+unsigned int expe0(unsigned int Limit, int mode)
 {
-	
+	if (WordsCount < Limit)
+	{
+		printf("\tСловарь не содержит такого числа слов.\n");
+		exit(1);
+	}
+	int i;
+	unsigned int CollisionCount;
+	int *CollisionMas = (int*)malloc(HASHTAB_SIZE * sizeof(int));
+	for (i = 0; i < HASHTAB_SIZE; i++)
+	{
+		CollisionMas[i] = 0;
+	}
+	for (i = 0; i < Limit; i++)
+	{
+		switch (mode)
+		{
+			case 0:
+				CollisionMas[FNV_Hash(Words[i])] += 1;
+				break;
+			case 1:
+				CollisionMas[KP_Hash(Words[i])] += 1;
+				break;
+			case 2:
+				CollisionMas[ADD_Hash(Words[i])] += 1;
+				break;
+			case 3:
+				CollisionMas[XOR_Hash(Words[i])] += 1;
+				break;
+			case 4:
+				CollisionMas[JENKINS_one_at_a_time_Hash(Words[i])] += 1;
+				break;
+		}
+	}
+	for (i = 0; i < HASHTAB_SIZE; i++)
+	{
+		if (CollisionMas[i] > 0)
+		{
+			CollisionMas[i]--;
+			CollisionCount += CollisionMas[i];
+			printf("%d\t%d\n", i, CollisionMas[i]);
+		}
+			
+	}
+	return CollisionCount;
 }
 
-int main()
+void expe1(unsigned int Limit)
 {
-	char *Words;
-	Words = (char*)malloc(sizeof(Words)*WordsCount);
-	
-		printf("\n%p\n", Words);
-	Read(&Words);
-	
-	
-	
+	if (WordsCount < Limit)
+	{
+		printf("\tСловарь не содержит такого числа слов.\n");
+		exit(1);
+	}
 	int i;
-
-	struct listnode *node;
+//	struct listnode *node;
 	hashtab_init(hashtab);
-
 	double tN = 0;
+	
+	// Создание хеш таблицы
 	tN = wtime();
-
-	printf("\tСоздание хеш таблицы из %d элементов: ", WordsCount);
-  	for (i = 0; i < WordsCount ; i++)
+	printf("\tСоздание хеш таблицы из %d элементов: ", Limit);
+  	for (i = 0; (i < WordsCount)&&(i < Limit) ; i++)
   	{
 		hashtab_add(hashtab, Words[i], i, 4);
 	}
 	tN = wtime() - tN;
 	printf("Создана за %f сек.\n", tN);
+	
 
+	// Создание бинарного дерева
+	struct bstree *tree, *node;
+	tN = wtime();
+	tree = bstree_create(Words[0], 0);
+	printf("\tСоздание бинарного дерева из %d элементов: ", Limit);
+  	for (i = 1; (i < WordsCount)&&(i < Limit) ; i++)
+  	{
+//		hashtab_add(hashtab, Words[i], i, 4);
+		bstree_add(tree, Words[i], i);
+	}
+	tN = wtime() - tN;
+	printf("Создано за %f сек.\n", tN);
+	
+
+	
+	node = bstree_lookup(tree, "хемотронный");
+	if (node != NULL)
+		printf("Value = %d\n", node->value);
+//	node = bstree_min(tree);
+//	printf("Min: value = %s\n", node->value);
+	
+	
+	
+//	printf("%d\n",hashtab_lookup(hashtab,"фаза",4)->value);
+//	printf("%s\n", Words[2]);
+}
+
+int main()
+{
+	Read();
+//	char *Words;
+//	Words = (char*)malloc(sizeof(Words)*WordsCount);
+
+//	expe1(WordsCount);
+	expe1(500);
+	
+//	expe0(WordsCount, 0);
 /*
 Mode:
 0:	FNV_Hash
