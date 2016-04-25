@@ -82,6 +82,11 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include "bstree.h"
 #include "hashtab.h"
 
+int getrand(int min, int max)
+{
+	return (double)rand() / (RAND_MAX + 1.0) * (max - min) + min;
+}
+
 double wtime()
 {
 	struct timeval t;
@@ -216,7 +221,7 @@ void expe1(unsigned int Limit)
 		printf("\tСловарь не содержит такого числа слов.\n");
 		exit(1);
 	}
-	int i;
+	int i, r, n;
 //	struct listnode *node;
 	hashtab_init(hashtab);
 	double tN = 0;
@@ -226,11 +231,25 @@ void expe1(unsigned int Limit)
 	printf("\tСоздание хеш таблицы из %d элементов: ", Limit);
   	for (i = 0; (i < WordsCount)&&(i < Limit) ; i++)
   	{
-		hashtab_add(hashtab, Words[i], i, 4);
+		hashtab_add(hashtab, Words[i], i, 3);
 	}
 	tN = wtime() - tN;
 	printf("Создана за %f сек.\n", tN);
 	
+	double rd = 0;
+	for (i = 0; i < 50000; i++)
+	{
+		r = getrand(0, Limit);
+		tN = wtime();
+		n = hashtab_lookup(hashtab, Words[r],3)->value;
+		rd += wtime() - tN;
+	//	printf("%d, %s за %f сек.\n", n, tN, Words[r]);
+	//	
+	}
+	printf("Среднее время выборки: %f сек.\n", rd/50000);
+
+
+
 
 	// Создание бинарного дерева
 	struct bstree *tree, *node;
@@ -247,9 +266,11 @@ void expe1(unsigned int Limit)
 	
 
 	
-	node = bstree_lookup(tree, "хемотронный");
-	if (node != NULL)
-		printf("Value = %d\n", node->value);
+//	node = bstree_lookup(tree, "хемотронный");
+//	if (node != NULL)
+//		printf("Value = %d\n", node->value);
+
+
 //	node = bstree_min(tree);
 //	printf("Min: value = %s\n", node->value);
 	
@@ -261,12 +282,16 @@ void expe1(unsigned int Limit)
 
 int main()
 {
+	time_t t;
+	srand((unsigned) time(&t));
+	
+	
 	Read();
 //	char *Words;
 //	Words = (char*)malloc(sizeof(Words)*WordsCount);
 
 //	expe1(WordsCount);
-	expe1(500);
+	expe1(WordsCount);
 	
 //	expe0(WordsCount, 0);
 /*
