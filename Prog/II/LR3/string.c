@@ -69,3 +69,13 @@ int scmp(char m[], char n[])
 		return 1;
 	return -1;
 }
+
+char *skip_spaces(char *suf)
+// Функция пропуска пробельных символов
+{
+	while( schr(" \t\n",*suf) )
+	{
+		suf++;
+	}
+	return suf;
+}
