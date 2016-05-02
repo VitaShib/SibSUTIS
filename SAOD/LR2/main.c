@@ -82,6 +82,12 @@ bstree.c (реализация функций) и bstree.h (объявление
 #include "bstree.h"
 #include "hashtab.h"
 
+#define clRed "\033[38;05;196m"
+#define clBoldRed "\033[01;38;05;196m"
+#define clNormal "\033[m"
+#define clBoldBlue "\033[01;38;05;21m"
+#define CLEAR "\033c"
+
 int getrand(int min, int max)
 {
 	return (double)rand() / (RAND_MAX + 1.0) * (max - min) + min;
@@ -94,17 +100,14 @@ double wtime()
 	return (double)t.tv_sec + (double)t.tv_usec * 1E-6;
 }
 
-#define IFILE "dic.list"
-#define WordsCount 1259840
+#define IFILE "dictionaryns.dat"
+//#define WordsCount 1259840
+#define WordsCount 1283313
 
 char *Words[WordsCount];
 
 void Read()
 {
-//	char *Words = nWords[0];
-//	printf("\n%p\n", Words);
-//	printf("\n%p\n", &Words[1]);
-	
 	char word[100]= {' '};
 
 	uint32_t CountWord = 0, CountSpace = 0;
@@ -131,20 +134,12 @@ void Read()
 		{
 			inWord = 0;
 			++CountSpace;
-
-//Для вывода
 			if (WLen)
 			{
 				word[WLen] = '\0';
-			//	printf("%s %d\n", word, WLen);
-			//	printf("cmp: %d\n", strncmp(word, word, WLen-1));
-			
 				Words[CountWord - 1] = (char*)malloc((WLen + 1) * sizeof(char));
-			//	Words[CountWord - 1] = (char*)malloc((WLen + 1) * sizeof(char));
 				strcpy(Words[CountWord - 1], word);
 			}
-//
-
 			WLen = 0;
 		}
 		else
@@ -222,7 +217,6 @@ void expe1(unsigned int Limit)
 		exit(1);
 	}
 	int i, r, n;
-//	struct listnode *node;
 	hashtab_init(hashtab);
 	double tN = 0;
 	
@@ -237,66 +231,44 @@ void expe1(unsigned int Limit)
 	printf("Создана за %f сек.\n", tN);
 	
 	double rd = 0;
-	for (i = 0; i < 500; i++)
+	for (i = 0; i < 50000; i++)
 	{
 		r = getrand(0, Limit);
 		tN = wtime();
 		n = hashtab_lookup(hashtab, Words[r],3)->value;
 		rd += wtime() - tN;
-	//	printf("%d, %s за %f сек.\n", n, tN, Words[r]);
-	//	
 	}
-	printf("Среднее время выборки: %f сек.\n", rd/500);
+	printf("\t%sСреднее время выборки: %f сек.%s\n", clBoldRed, rd/50000, clNormal);
 
 
 
 	// Создание бинарного дерева
-//	struct bstree *tree, *node;
-	tN = wtime();
-//	tree = bstree_create(Words[0], 0);
-	BSTree *tree = NULL;
-	tree = bstree_create(Words[0], 0);
-
 	printf("\tСоздание бинарного дерева из %d элементов: ", Limit);
-  	for (i = 1; (i < WordsCount)&&(i < Limit) ; i++)
-  	{
-		//bstree_add(tree, Words[i], i);
+	struct bstree *tree ,*node;
+	tree = bstree_create(Words[0],0);
+	
+	tN = wtime();
+	for (i = 1; (i < WordsCount)&&(i < Limit) ; i++)
+	{
 		bstree_add(tree, Words[i], i);
 	}
+
 	tN = wtime() - tN;
 	printf("Создано за %f сек.\n", tN);
 	
-
 	rd = 0;
-
 	for (i = 0; i < 50000; i++)
 	{
 		r = getrand(0, Limit);
 		tN = wtime();
-		n = bstree_lookup(tree, Words[r])->data.value;
+		n = bstree_lookup(tree, Words[r])->value;
 		rd += wtime() - tN;
 	//	printf("%d %d\n", n, r);
 	//	printf("%d, %s за %f сек.\n", n, rd, Words[r]);
 	//	printf("%f\n",wtime() - tN);
 	//	
 	}
-	printf("Среднее время выборки: %f сек.\n", rd/50000);
-
-
-
-	
-//	node = bstree_lookup(tree, "хемотронный");
-//	if (node != NULL)
-//		printf("Value = %d\n", node->value);
-
-
-//	node = bstree_min(tree);
-//	printf("Min: value = %s\n", node->value);
-	
-	
-	
-//	printf("%d\n",hashtab_lookup(hashtab,"фаза",4)->value);
-//	printf("%s\n", Words[2]);
+	printf("\t%sСреднее время выборки: %f сек.%s\n", clBoldRed, rd/50000, clNormal);
 }
 
 void expe4(unsigned int Limit)
@@ -304,30 +276,33 @@ void expe4(unsigned int Limit)
 	int i, r, n;
 	double tN = 0;
 	// Создание бинарного дерева
-//	struct bstree *tree, *node;
-	tN = wtime();
-//	tree = bstree_create(Words[0], 0);
-	BSTree *tree = NULL;
-	tree = bstree_create(Words[0], 0);
-
 	printf("\tСоздание бинарного дерева из %d элементов: ", Limit);
-  	for (i = 1; (i < WordsCount)&&(i < Limit) ; i++)
-  	{
-		//bstree_add(tree, Words[i], i);
+	struct bstree *tree ,*node;
+	tree = bstree_create(Words[0],0);
+	
+	tN = wtime();
+	for (i = 1; (i < WordsCount)&&(i < Limit) ; i++)
+	{
 		bstree_add(tree, Words[i], i);
 	}
+
 	tN = wtime() - tN;
 	printf("Создано за %f сек.\n", tN);
-	
 
 	tN = wtime();
-	n = bstree_max(tree)->data.value;
+	n = bstree_min(tree)->value;
 	tN = wtime() - tN;
-	printf("%d %s\n", bstree_max(tree)->data.value, bstree_max(tree)->data.key);
-	//printf("%d %d\n", n, r);
-	//printf("%d, %s за %f сек.\n", n, rd, Words[r]);
-	//printf("%f\n",wtime() - tN);
+	printf("\t%sМинимум: %d \"%s\", за %f сек.%s\n", clBoldRed, bstree_min(tree)->value, bstree_min(tree)->key, tN, clNormal);
 
+	tN = wtime();
+	n = bstree_max(tree)->value;
+	tN = wtime() - tN;
+	printf("\t%sМаксимум: %d \"%s\", за %f сек.%s\n", clBoldRed, bstree_max(tree)->value, bstree_max(tree)->key, tN, clNormal);
+}
+
+void expe6(unsigned int Limit)
+{
+	
 }
 
 int main()
@@ -341,8 +316,8 @@ int main()
 //	Words = (char*)malloc(sizeof(Words)*WordsCount);
 
 //	expe1(WordsCount);
-//	expe1(1250000);
-	expe4(1250000);
+	expe1(1250000);
+//	expe4(1250000);
 	
 //	expe0(WordsCount, 0);
 /*
