@@ -4,16 +4,14 @@
 unsigned FNV_Hash(void *key)
 {
 	int len = strlen(key);
-    unsigned char *p = key;
-    unsigned h = 2166136261;
-    int i;
-
-    for (i = 0; i < len; i++)
-    {
-        h = (h * 16777619) ^ p[i];
-    }
-
-    return h % HASHTAB_SIZE;
+	unsigned char *p = key;
+	unsigned h = 2166136261;
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		h = (h * 16777619) ^ p[i];
+	}
+	return h % HASHTAB_SIZE;
 }
 
 unsigned int KP_Hash(char *key)
@@ -30,47 +28,44 @@ unsigned int KP_Hash(char *key)
 unsigned int ADD_Hash(void *key)
 {
 	int len = strlen(key);
-    unsigned char *p = key;
-    unsigned h = 0;
-    int i;
+	unsigned char *p = key;
+	unsigned h = 0;
+	int i;
 
-    for (i = 0; i < len; i++)
-    {
-        h += p[i];
-    }
-
-    return h % HASHTAB_SIZE;
+	for (i = 0; i < len; i++)
+	{
+		h += p[i];
+	}
+	return h % HASHTAB_SIZE;
 }
 
 unsigned int XOR_Hash(void *key) // Чоень плохая хеш функция
 {
 	int len = strlen(key);
-    unsigned char *p = key;
-    unsigned h = 0;
-    int i;
-
-    for (i = 0; i < len; i++)
-    {
-        h ^= p[i];
-    }
-
-    return h % HASHTAB_SIZE;
+	unsigned char *p = key;
+	unsigned h = 0;
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		h ^= p[i];
+	}
+	return h % HASHTAB_SIZE;
 }
 
 unsigned int JENKINS_one_at_a_time_Hash(char *key)
 {
 	int len = strlen(key);
-    unsigned int hash, i;
-    for(hash = i = 0; i < len; ++i)
-    {
-        hash += key[i];
-        hash += (hash << 10);
-        hash ^= (hash >> 6);
-    }
-    hash += (hash << 3);
-    hash ^= (hash >> 11);
-    hash += (hash << 15);
-    return hash % HASHTAB_SIZE;
+	unsigned int hash, i;
+	for(hash = i = 0; i < len; ++i)
+	{
+		hash += key[i];
+		hash += (hash << 10);
+		hash ^= (hash >> 6);
+	}
+	hash += (hash << 3);
+	hash ^= (hash >> 11);
+	hash += (hash << 15);
+	return hash % HASHTAB_SIZE;
 }
 // Функции нахождения хешей
 
@@ -86,9 +81,7 @@ void hashtab_init(struct listnode **hashtab)//T Init = O(h)
 void hashtab_add(struct listnode **hashtab, char *key, int value, int mode)
 {
 	struct listnode *node;
-	
 	unsigned int index;
-	
 	switch (mode)
 	{
 		case 0:
@@ -108,37 +101,16 @@ void hashtab_add(struct listnode **hashtab, char *key, int value, int mode)
 			break;
 	}
 	// Вставка в начало списка
-    node = malloc(sizeof(*node));
-    if (node == NULL)
-	{
-//        err = ERROR_MALLOC;
-        return;
-    }
-//	node->next = hashtab[index];
-//	node->key = key;
-//	node->value = value;
-//	hashtab[index] = node;
-		node->key = key;
-		node->value = value;
-		node->next = hashtab[index];
-		hashtab[index] = node;
-}
-/*
-// Добавление элемента в хеш-таблицу
-void hashtab_add(struct listnode **hashtab, char *key, int value)//T Add = T Hash + O(1) = O(1)
-{
-	struct listnode *node;
-	int index = hashtab_hash(key);
-	// Вставка в начало списка
 	node = malloc(sizeof(*node));
-	if (node != NULL)
+	if (node == NULL)
 	{
-		node->key = key;
-		node->value = value;
-		node->next = hashtab[index];
-		hashtab[index] = node;
+        	return;
 	}
-}*/
+	node->key = key;
+	node->value = value;
+	node->next = hashtab[index];
+	hashtab[index] = node;
+}
 
 struct listnode *hashtab_lookup(struct listnode **hashtab, char *key, int mode)
 {
