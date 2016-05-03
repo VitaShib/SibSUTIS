@@ -72,6 +72,9 @@ bstree.c (реализация функций) и bstree.h (объявление
 
 */
 
+
+// ./a.out dictionaryns.dat 4 200000
+
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -100,16 +103,15 @@ double wtime()
 	return (double)t.tv_sec + (double)t.tv_usec * 1E-6;
 }
 
-#define IFILE "dictionaryns.dat"
+//#define IFILE "dictionaryns.dat"
 //#define WordsCount 1259840
 #define WordsCount 1283313
 
 char *Words[WordsCount];
 
-void Read()
+void Read(char *IFILE)
 {
 	char word[100]= {' '};
-
 	uint32_t CountWord = 0, CountSpace = 0;
 	FILE* f;
 	printf("\tОткрытие файла: %s\n", IFILE);
@@ -121,10 +123,8 @@ void Read()
 		exit(1);
 	}
 	printf("\tЧтение файла\n");
-
 	register int inWord = 0;
 	int c;
-
 	int WLen = 0;
 	double tN = 0;
 	tN = wtime();
@@ -146,17 +146,15 @@ void Read()
 		{
 			word[WLen] = c;
 			++WLen;
-
 			if(inWord == 0)
 			{
-
 				inWord = 1;
 				++CountWord;
 			}
 		}
 	}
 	tN = wtime() - tN;
-	printf("\tФайл прочитан за %f сек. Содержит %d слов.\n", tN, CountWord);
+	printf("\tФайл прочитан за %.8f сек. Содержит %d слов.\n", tN, CountWord);
 //	printf("\tПрочитано слов: %d. Найдено пробелов/переносов: %d\n", CountWord, CountSpace-1);	
 }
 
@@ -169,7 +167,7 @@ unsigned int expe0(unsigned int Limit, int mode)
 		exit(1);
 	}
 	int i;
-	unsigned int CollisionCount;
+	unsigned int CollisionCount = 0;
 	int *CollisionMas = (int*)malloc(HASHTAB_SIZE * sizeof(int));
 	for (i = 0; i < HASHTAB_SIZE; i++)
 	{
@@ -202,7 +200,7 @@ unsigned int expe0(unsigned int Limit, int mode)
 		{
 			CollisionMas[i]--;
 			CollisionCount += CollisionMas[i];
-			printf("%d\t%d\n", i, CollisionMas[i]);
+		//	printf("%d\t%d\n", i, CollisionMas[i]);
 		}
 			
 	}
@@ -225,20 +223,20 @@ void expe1(unsigned int Limit)
 	printf("\tСоздание хеш таблицы из %d элементов: ", Limit);
   	for (i = 0; (i < WordsCount)&&(i < Limit) ; i++)
   	{
-		hashtab_add(hashtab, Words[i], i, 3);
+		hashtab_add(hashtab, Words[i], i, 0);
 	}
 	tN = wtime() - tN;
-	printf("Создана за %f сек.\n", tN);
+	printf("Создана за %.8f сек.\n", tN);
 	
 	double rd = 0;
 	for (i = 0; i < 50000; i++)
 	{
 		r = getrand(0, Limit);
 		tN = wtime();
-		n = hashtab_lookup(hashtab, Words[r],3)->value;
+		n = hashtab_lookup(hashtab, Words[r], 0)->value;
 		rd += wtime() - tN;
 	}
-	printf("\t%sСреднее время выборки: %f сек.%s\n", clBoldRed, rd/50000, clNormal);
+	printf("\t%sСреднее время выборки: %.8f сек.%s\n", clBoldRed, rd/50000, clNormal);
 
 
 
@@ -254,7 +252,7 @@ void expe1(unsigned int Limit)
 	}
 
 	tN = wtime() - tN;
-	printf("Создано за %f сек.\n", tN);
+	printf("Создано за %.8f сек.\n", tN);
 	
 	rd = 0;
 	for (i = 0; i < 50000; i++)
@@ -264,11 +262,11 @@ void expe1(unsigned int Limit)
 		n = bstree_lookup(tree, Words[r])->value;
 		rd += wtime() - tN;
 	//	printf("%d %d\n", n, r);
-	//	printf("%d, %s за %f сек.\n", n, rd, Words[r]);
-	//	printf("%f\n",wtime() - tN);
+	//	printf("%d, %s за %.8f сек.\n", n, rd, Words[r]);
+	//	printf("%.8f\n",wtime() - tN);
 	//	
 	}
-	printf("\t%sСреднее время выборки: %f сек.%s\n", clBoldRed, rd/50000, clNormal);
+	printf("\t%sСреднее время выборки: %.8f сек.%s\n", clBoldRed, rd/50000, clNormal);
 }
 
 void expe4(unsigned int Limit)
@@ -287,36 +285,96 @@ void expe4(unsigned int Limit)
 	}
 
 	tN = wtime() - tN;
-	printf("Создано за %f сек.\n", tN);
+	printf("Создано за %.8f сек.\n", tN);
 
 	tN = wtime();
 	n = bstree_min(tree)->value;
 	tN = wtime() - tN;
-	printf("\t%sМинимум: %d \"%s\", за %f сек.%s\n", clBoldRed, bstree_min(tree)->value, bstree_min(tree)->key, tN, clNormal);
+	printf("\t%sМинимум: %d \"%s\", за %.8f сек.%s\n", clBoldRed, bstree_min(tree)->value, bstree_min(tree)->key, tN, clNormal);
 
 	tN = wtime();
 	n = bstree_max(tree)->value;
 	tN = wtime() - tN;
-	printf("\t%sМаксимум: %d \"%s\", за %f сек.%s\n", clBoldRed, bstree_max(tree)->value, bstree_max(tree)->key, tN, clNormal);
+	printf("\t%sМаксимум: %d \"%s\", за %.8f сек.%s\n", clBoldRed, bstree_max(tree)->value, bstree_max(tree)->key, tN, clNormal);
 }
 
-void expe6(unsigned int Limit)
+void expe6(unsigned int Limit, int hashmode)
 {
+	if (WordsCount < Limit)
+	{
+		printf("\tСловарь не содержит такого числа слов.\n");
+		exit(1);
+	}
+	int i, n, r;
+	hashtab_init(hashtab);
+	double tN = 0;
 	
+	// Создание хеш таблицы
+	tN = wtime();
+	printf("\tСоздание хеш таблицы из %d элементов: ", Limit);
+  	for (i = 0; (i < WordsCount)&&(i < Limit) ; i++)
+  	{
+		hashtab_add(hashtab, Words[i], i, hashmode);
+	}
+	tN = wtime() - tN;
+	printf("Создана за %.8f сек.\n", tN);
+	
+	double rd = 0;
+	for (i = 0; i < 500000; i++)
+	{
+		r = getrand(0, Limit);
+		tN = wtime();
+		n = hashtab_lookup(hashtab, Words[r], hashmode)->value;
+//	printf("%s %s\n", Words[n], Words[r]);
+		rd += wtime() - tN;
+	}
+	printf("\t%sСреднее время выборки: %.8f сек.%s\n", clBoldRed, rd/500000, clNormal);
 }
 
-int main()
+int main(int argc, char **argv)
 {
 	time_t t;
 	srand((unsigned) time(&t));
-	
-	
-	Read();
+	if (4 > argc)
+		return 1;
+
+	int mode = atoi(argv[2]);
+	unsigned int Lim = atol(argv[3]);
+
+	Read(argv[1]);
 //	char *Words;
 //	Words = (char*)malloc(sizeof(Words)*WordsCount);
 
 //	expe1(WordsCount);
-	expe1(1250000);
+
+	switch (mode)
+	{
+		case 0:
+			printf("К: %d для %d\n" ,expe0(Lim, atoi(argv[4])) , Lim);
+			break;
+		case 1:
+			expe1(Lim);
+			break;
+		case 2:
+			
+			break;
+		case 3:
+			
+			break;
+		case 4:
+			expe4(Lim);
+			break;
+		case 5:
+			
+			break;
+		case 6:
+			expe6(Lim, atoi(argv[4]));
+			break;
+	}
+
+
+
+//	expe1(1250000);
 //	expe4(1250000);
 	
 //	expe0(WordsCount, 0);
