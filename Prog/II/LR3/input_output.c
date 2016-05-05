@@ -30,7 +30,7 @@ int input()
 
 int Read(char *fname, char *textfile)
 {
-	FILE *fp = fopen(fname,"r");
+	FILE *fp = fopen(fname, "r");
 	int ii=0;
 	// Check the file 
 	if(fp == NULL)

@@ -105,23 +105,18 @@ void check(char *pat, char *dir, char del)
 	suntok(pat, del, RAW, Z);
 }
 
-void process(char *pat, char *dir, char del)
+void process(char *pat, char *dir)
 {
-	char *RAW[MAXSIZE];
-	char *TOK[MAXSIZE];
-	char *a;
-	int Z = 0, R = 0, i, j, k, dLEN, pLEN;
-	pLEN = slen(pat);
-	Z = stok(pat, del, RAW);
-	dLEN = slen(dir);
-	if (Z > 10)
+	
+	void obrstr(char *pat, char *dir)
 	{
-		printf("%sПо заданию программа не может обработать больше 10 путей%s\n", clBoldRed, clNormal);
-		exit(1);
-	}
-	for (i = 0; i < Z; i++)
-	{
-		R = stok(RAW[i], '/', TOK);
+		int R = 0, j, k, dLEN, pLEN;
+		char *TOK[MAXSIZE];
+		char *a;
+		pLEN = slen(pat);
+		dLEN = slen(dir);
+
+		R = stok(pat , '/', TOK);
 		for (j = 0; j < R; j++)
 		{
 			if ((j == 0) && (slen(TOK[j]) > 1) && (TOK[j][0] == '~'))
@@ -129,16 +124,15 @@ void process(char *pat, char *dir, char del)
 				for (a = pat + pLEN; a > TOK[j]; --a)
 					*(a + dLEN) = *a;
 				scpy(TOK[j], dir);
-				*(TOK[j]+dLEN) = '/';
-				for (k = i + 1; k < Z; k++)
-					RAW[k] += dLEN;
+				*(TOK[j] + dLEN) = '/';
 				for (k = j - 1; k < R; k++)
 					TOK[k] += dLEN;
 			}
 		}
-		suntok(RAW[i], '/', TOK, R);
+		suntok(pat, '/', TOK, R);
+		return;	
 	}
-	suntok(pat, del, RAW, Z);
+	obrstr(pat, dir);
 	return;
 }
 

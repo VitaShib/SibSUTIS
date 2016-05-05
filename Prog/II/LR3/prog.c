@@ -49,7 +49,7 @@ II уровень сложности. Вариант 3
 */
 
 #include <stdio.h>
-#include <stlib.h>
+#include <stdlib.h>
 
 #include "string.h"
 #include "processing.h"
@@ -58,7 +58,14 @@ II уровень сложности. Вариант 3
 
 int main()
 {
+	char str[] = "~alex/gcc.c";
+	char dir[] = "/home";
+	char textfile[100000] = {"\0"};
+	stu sign[1000];
 
+	Read("syslog.conf", textfile);
+printf("%s\n", textfile);
+//	process(str, dir);
 //	input();
 
 	
