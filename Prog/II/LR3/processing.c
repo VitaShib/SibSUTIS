@@ -152,8 +152,12 @@ int Researcher(char *Str)
 	
 	int ispath(char *str)
 	{
+		int i;
 		if (1 > slen(str))
 			return 0;
+		for (i=0; str[i]!='\0'; i++)
+			if ((' '>str[i]) || (str[i]=='"') || (str[i]=='*') || (str[i]==':') || (str[i]=='<') || (str[i]=='>') || (str[i]=='?') || (str[i]=='\\') || ('~'<str[i]))
+				return 0;
 		if ( ( (str[0]) != '~') && ( (str[0]) != '/') )
 		{
 			if (str[0] != '@')

@@ -27,7 +27,7 @@ int input()
 	fclose(file);
 	return 0;
 }*/
-
+/*
 void Read(char *fname, char *textfile)
 {
 	int i=0, ch;
@@ -47,5 +47,30 @@ void Read(char *fname, char *textfile)
 	}
 	fclose(fp);
 	return;
+}*/
+
+
+
+
+
+void Read(char *fname, char *textfile)
+{
+	FILE* f;
+	if((f = fopen(fname, "r")) == NULL)
+	{
+		perror("fopen");
+		exit(1);
+	}
+	unsigned int i = 0;
+	int c;
+
+	while((c = getc(f)) != EOF)
+	{
+		textfile[i] = c;
+		i++;
+	}
 }
+
+
+
 

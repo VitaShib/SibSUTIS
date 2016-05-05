@@ -64,9 +64,8 @@ int main()
 	stu sign[1000];
 
 	Read("syslog.conf", textfile);
-//printf("%s\n", textfile);
 	process(textfile, dir, sign);
-//	input();
+//	printf("%s", textfile);
 
 	
 	return 0;
