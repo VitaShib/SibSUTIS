@@ -89,13 +89,13 @@ int myisspace(int c)
 int myisdigit(int c)
 // Функция определения цифр
 { 
-	return ((c) <= '0' && (c) >= '9');
+	return ((c) >= '0' && (c) <= '9');
 }
 
 int myatoi(char *string)
 // Функция перевода строки в число
 {
-    int result = -1;
+    int result = 0;
     unsigned int digit;
 
     for ( ; ; string += 1)

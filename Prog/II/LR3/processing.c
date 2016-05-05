@@ -98,16 +98,15 @@ void check(char *pat, char *dir, char del)
 int Researcher(char *Str)
 {
 	
-	int isip(char *str)
+	int isipv4(char *str)
 	{
 		char *EL[MAXSIZE];
 		int i, j;
-		
-		printf("%s\n", str);
+		if ((7 > slen(str)) || (15 < slen(str)))
+			return 0;
 		int Z = stok(str, '.', EL);
-		printf("%d\n", Z);
-		for (i = 0; i <= Z; ++i)
-		{printf("%s\n", EL[i]);
+		for (i = 0; i < Z; ++i)
+		{
 			for (j = 0; EL[i][j] != '\0'; ++j)
 			{
 				if (myisdigit(EL[i][j]))
@@ -118,30 +117,83 @@ int Researcher(char *Str)
 					return 0;
 				}
 			}
-			if (myatoi(EL[i]) > 255)
+			if (255 < myatoi(EL[i]))
 			{
 				suntok(str, '.', EL, Z);
 				return 0;
 			}
 		}
-		
-
+		suntok(str, '.', EL, Z);
+		return 1;
 	}
 	
-	printf("%d\n", isip("300.300.300.300"));
+	int isdomain(char *str)
+	{
+		char d_ru[] = "ru";
+		char d_com[] = "com";
+		char d_org[] = "org";
+		char *EL[MAXSIZE];
+		int i;
+		if (6 > slen(str))
+			return 0;
+		int Z = stok(str, '.', EL);
+		if (!((scmp(EL[Z - 1], d_ru) == 0) || (scmp(EL[Z - 1], d_com) == 0) || (scmp(EL[Z - 1], d_org) == 0)) )
+			return 0;
+		suntok(str, '.', EL, Z);
+		if (3 != Z)
+			return 0;
+		for (i = 0; str[i] != '\0'; i++)
+		{
+			if (!((str[i] >= 'A')&&(str[i] <= 'Z') || ( (str[i] >= 'a')&&(str[i] <= 'z')) || str[i] == '.' ))
+				return 0;
+		}
+		return 1;
+	}
 	
+	int ispath(char *str)
+	{
+		if (1 > slen(str))
+			return 0;
+		if ( ( (str[0]) != '~') && ( (str[0]) != '/') )
+		{
+			if (str[0] != '@')
+				return 0;
+			else
+				if (!(isipv4(&str[1]) || isdomain(&str[1])))
+					return 0;
+		}
+		return 1;
+	}
+	
+	int isservice(char *str)
+	{
+		char *EL[MAXSIZE];
+		int i;
+		if ((str[0] == '*') || (str[0] == '.') || (str[slen(str)-1] == '.'))
+			return 0;
+		if (3 > slen(str))
+			return 0;
+		int Z = stok(str, '.', EL);
+		suntok(str, '.', EL, Z);
+		if (2 != Z)
+			return 0;
+		for (i = 0; str[i] != '\0'; i++)
+		{
+			if (!((str[i] >= 'A')&&(str[i] <= 'Z') || ( (str[i] >= 'a')&&(str[i] <= 'z')) || (str[i] == '.') || (str[i] == '*') ))
+				return 0;
+		}
+		return 1;
+	}
+
 	if (Str[0] == '#')
 		return 4;
-	if (Str[1] == '+')
-		// Проверка IP/хоста
-//FIXME
-//		if (isip(Str) || isdomain(Str))
+	if (Str[0] == '+')
+		if (isipv4(&Str[1]) || isdomain(&Str[1]))
 			return 2;
-//	if ispath(Str)
+	if (ispath(Str))
 		return 1;
-//	if isservice(Str)
+	if (isservice(Str))
 		return 0;
-	
 	return -1;
 }
 
