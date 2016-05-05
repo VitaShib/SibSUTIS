@@ -49,16 +49,17 @@ II уровень сложности. Вариант 3
 */
 
 #include <stdio.h>
+#include <stlib.h>
 
 #include "string.h"
-//#include "processing.h"
+#include "processing.h"
 #include "input_output.h"
 
 
 int main()
 {
 
-	input();
+//	input();
 
 	
 	return 0;

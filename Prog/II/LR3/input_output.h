@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include "processing.h"
-#include "string.h"
+//#include "string.h"
 int input();
 
 

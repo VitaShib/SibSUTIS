@@ -1,5 +1,5 @@
 #include "input_output.h"
-
+/*
 int input()
 {
 	FILE *file;
@@ -25,6 +25,27 @@ int input()
 		printf("%s%s\n",result_sting,real_tail);
 	}
 	fclose(file);
+	return 0;
+}*/
+
+int Read(char *fname, char *textfile)
+{
+	FILE *fp = fopen(fname,"r");
+	int ii=0;
+	// Check the file 
+	if(fp == NULL)
+	{
+		printf("No file");
+		return 0; 
+	}
+	// Read the file
+	for(ii=0;ii<1000;ii++)
+	{
+		int ret = fscanf(fp, "%c", &textfile[ii]);
+		if(ret == EOF )
+			break;
+	}
+	fclose(fp);
 	return 0;
 }
 
