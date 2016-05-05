@@ -28,24 +28,24 @@ int input()
 	return 0;
 }*/
 
-int Read(char *fname, char *textfile)
+void Read(char *fname, char *textfile)
 {
+	int i=0, ch;
 	FILE *fp = fopen(fname, "r");
-	int ii=0;
 	// Check the file 
 	if(fp == NULL)
 	{
 		printf("No file");
-		return 0; 
+		return; 
 	}
 	// Read the file
-	for(ii=0;ii<1000;ii++)
+	for(i=0; i<1000; i++)
 	{
-		int ret = fscanf(fp, "%c", &textfile[ii]);
-		if(ret == EOF )
+		ch = fscanf(fp, "%c", &textfile[i]);
+		if(ch == EOF )
 			break;
 	}
 	fclose(fp);
-	return 0;
+	return;
 }
 

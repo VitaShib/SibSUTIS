@@ -79,3 +79,33 @@ char *skip_spaces(char *suf)
 	}
 	return suf;
 }
+
+int myisspace(int c)
+// Функция определения пробельных символов
+{ 
+	return ((c) == ' ' || ((c) >= '\t' && (c) <= '\r'));
+}
+
+int myisdigit(int c)
+// Функция определения цифр
+{ 
+	return ((c) <= '0' && (c) >= '9');
+}
+
+int myatoi(char *string)
+// Функция перевода строки в число
+{
+    int result = -1;
+    unsigned int digit;
+
+    for ( ; ; string += 1)
+    {
+		digit = *string - '0';
+		if (digit > 9)
+		{
+			break;
+		}
+		result = (10 * result) + digit;
+    }
+    return result;
+}

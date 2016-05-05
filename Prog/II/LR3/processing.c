@@ -1,14 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-
-#define MAXPATH 261
-#define MAXCNT 10
-#define MAXSIZE (MAXPATH*MAXCNT)
-
-#define clRed "\033[38;05;196m"
-#define clBoldRed "\033[01;38;05;196m"
-#define clNormal "\033[m"
-#define clBoldBlue "\033[01;38;05;21m"
+#include "processing.h"
 
 /*
 void input(char *a, char *c, char *d)
@@ -105,10 +95,98 @@ void check(char *pat, char *dir, char del)
 	suntok(pat, del, RAW, Z);
 }
 
-void process(char *pat, char *dir)
+int Researcher(char *Str)
 {
 	
-	void obrstr(char *pat, char *dir)
+	int isip(char *str)
+	{
+		char *EL[MAXSIZE];
+		int i, j;
+		
+		printf("%s\n", str);
+		int Z = stok(str, '.', EL);
+		printf("%d\n", Z);
+		for (i = 0; i <= Z; ++i)
+		{printf("%s\n", EL[i]);
+			for (j = 0; EL[i][j] != '\0'; ++j)
+			{
+				if (myisdigit(EL[i][j]))
+					continue;
+				else
+				{
+					suntok(str, '.', EL, Z);
+					return 0;
+				}
+			}
+			if (myatoi(EL[i]) > 255)
+			{
+				suntok(str, '.', EL, Z);
+				return 0;
+			}
+		}
+		
+
+	}
+	
+	printf("%d\n", isip("300.300.300.300"));
+	
+	if (Str[0] == '#')
+		return 4;
+	if (Str[1] == '+')
+		// Проверка IP/хоста
+//FIXME
+//		if (isip(Str) || isdomain(Str))
+			return 2;
+//	if ispath(Str)
+		return 1;
+//	if isservice(Str)
+		return 0;
+	
+	return -1;
+}
+
+void SplitStr(char *text, stu *sig)
+{
+	char word[MAXPATH]= {' '};
+	int CountWord = 0, i, inWord = 0, WLen = 0, count = 0;
+
+	for (i=0; text[i] != '\0'; i++)
+	{
+		if (myisspace(text[i]) || text[i] == '\n')
+		{
+			inWord = 0;
+			if (WLen)
+			{
+				word[WLen] = '\0';
+				sig[count].value = (char*)malloc((WLen + 1) * sizeof(char));
+				sig[count].id = Researcher(word);
+				scpy(sig[count].value, word);
+				count++;
+			}
+			word[0] = text[i];
+			word[1] = '\0';
+			sig[count].value = (char*)malloc(2 * sizeof(char));
+			sig[count].id = 3;
+			scpy(sig[count].value, word);
+			count++;
+			WLen = 0;
+		}
+		else
+		{
+			word[WLen] = text[i];
+			++WLen;
+			if(inWord == 0)
+			{
+				inWord = 1;
+				++CountWord;
+			}
+		}
+	}
+}
+
+void process(char *Text, char *dir, stu *Sign)
+{
+	void OverwritePath(char *pat, char *dir)
 	{
 		int R = 0, j, k, dLEN, pLEN;
 		char *TOK[MAXSIZE];
@@ -132,7 +210,8 @@ void process(char *pat, char *dir)
 		suntok(pat, '/', TOK, R);
 		return;	
 	}
-	obrstr(pat, dir);
+//	OverwritePath(pat, dir);
+	SplitStr(Text, Sign);
 	return;
 }
 

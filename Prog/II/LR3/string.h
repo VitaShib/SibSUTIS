@@ -7,6 +7,9 @@ int stok(char str[], char delim, char *ptr[]);
 int suntok(char *str, char delim, char *ptr[80],int cnt);
 void scpy(char m[], char y[]);
 int scmp(char m[], char n[]);
+int myisspace(int c);
+int myisdigit(int c);
+int myatoi(char *string);
 
 #endif
 
