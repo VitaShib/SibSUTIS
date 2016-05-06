@@ -32,7 +32,7 @@ typedef struct
 	int line;
 } stu;
 
-void process(char *Text, char *dir, stu *Sign);
+int process(char *Text, char *dir, stu *Sign);
 
 
 //int update(...);

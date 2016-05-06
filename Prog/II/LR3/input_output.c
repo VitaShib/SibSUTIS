@@ -57,6 +57,16 @@ void Read(char *fname, char *textfile)
 	}
 }
 
-
+void Write(char *fname, stu *sign, int count)
+{
+	int i;
+	for (i = 0; i < count; ++i)
+	{
+		if (0 <= sign[i].id)
+		{
+			printf("%s", sign[i].value);
+		}
+	}
+}
 
 

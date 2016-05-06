@@ -66,9 +66,9 @@ int main()
 //	interrogation(filepath, dir);
 	
 	Read("syslog.conf", textfile);
-	process(textfile, dir, sign);
+	int Z = process(textfile, dir, sign);
 //	printf("%s", textfile);
 
-	
+	Write(   dir    , sign, Z);
 	return 0;
 }

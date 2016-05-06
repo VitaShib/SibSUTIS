@@ -151,7 +151,7 @@ int SplitStr(char *text, stu *sig)
 	return count;
 }
 
-void process(char *Text, char *dir, stu *Sign)
+int process(char *Text, char *dir, stu *Sign)
 {
 	void OverwritePath(char *pat, char *dir)
 	{
@@ -178,7 +178,7 @@ void process(char *Text, char *dir, stu *Sign)
 	
 	int Z = SplitStr(Text, Sign);
 	
-	int i;
+	int i, j;
 	
 	for (i=0; i < Z ; i++)
 	{
@@ -189,10 +189,22 @@ void process(char *Text, char *dir, stu *Sign)
 				Sign[i].value = (char*)realloc(Sign[i].value, slen(Sign[i].value) + slen(dir) + 1);
 				OverwritePath(Sign[i].value, dir);
 			}
-			printf("\t%s\n", Sign[i].value);
+		}
+		if (Sign[i].id == -1)
+		{
+			for (j = 0; j < Z; ++j)
+			{
+				if (Sign[j].line == Sign[i].line)
+				{
+					Sign[j].id = -1;
+				}
+			}
+			
 		}
 	}
-	return;
+	
+	
+	return Z;
 }
 
 
