@@ -59,11 +59,11 @@ II уровень сложности. Вариант 3
 int main()
 {
 	char filepath[MAXPATH];
-	char dir[MAXPATH];
+	char dir[MAXPATH] = "/home";
 	char textfile[100000] = {"\0"};
 	stu sign[1000];
 
-	interrogation(filepath, dir);
+//	interrogation(filepath, dir);
 	
 	Read("syslog.conf", textfile);
 	process(textfile, dir, sign);

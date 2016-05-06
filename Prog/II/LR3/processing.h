@@ -29,6 +29,7 @@ typedef struct
 {
 	int id;
 	char *value;
+	int line;
 } stu;
 
 void process(char *Text, char *dir, stu *Sign);
