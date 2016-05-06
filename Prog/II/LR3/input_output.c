@@ -1,57 +1,43 @@
 #include "input_output.h"
-/*
-int input()
+
+void interrogation(char *path, char *dir)
 {
-	FILE *file;
-	char *fname = "syslog.conf";//     !!!!! c клавы
-	char result_sting[1024]; 				//Строка в 20 символов
-	file = fopen(fname,"r");
-	if(file == NULL)
+	int i;
+	printf(" path syslog: ");
+	fgets(path, MAXSIZE, stdin);
+	
+	if ((slen(path) == 1))
 	{
-		printf("Не могу открыть файл %s", fname);
-		return 0;
+		printf("\t%sПуть не введён%s\n", clBoldRed, clNormal);
+		exit(1);
 	}
-	int i=0;
-	char *real_tail;
-	while(fgets(result_sting, sizeof(result_sting), file))
+	
+	printf(" dir: ");
+	fgets(dir, MAXSIZE, stdin);
+	
+	if ((slen(dir) == 1))
 	{
-		real_tail="";
-		printf("Строка %d:Длина строки - %d:",i++,slen(result_sting));
-		if(result_sting[slen(result_sting)-1] == '\n')//проверяем является ли последний элемент в строке символом её окончания
+		printf("\t%sdir не введён%s\n", clBoldRed, clNormal);
+		exit(1);
+	}
+	if (dir[0] != '/')
+	{
+		printf("\t%sПуть dir не является абсолютным%s\n", clBoldRed, clNormal);
+		exit(1);
+	}
+	path[slen(path) - 1] = '\0';
+	dir[slen(dir) - 1] = '\0';
+
+	for (i = slen(dir) - 1; i > 1; --i)
+		if ((dir[i] == '/') && (dir[i - 1] == '/'))
 		{
-			real_tail="\\n";
-			result_sting[slen(result_sting)-1]='\0';
-		};// эта часть кода добавлена лишь для отображения символа конца строки в консоль без перевода на новую строку	
-		printf("%s%s\n",result_sting,real_tail);
-	}
-	fclose(file);
-	return 0;
-}*/
-/*
-void Read(char *fname, char *textfile)
-{
-	int i=0, ch;
-	FILE *fp = fopen(fname, "r");
-	// Check the file 
-	if(fp == NULL)
-	{
-		printf("No file");
-		return; 
-	}
-	// Read the file
-	for(i=0; i<1000; i++)
-	{
-		ch = fscanf(fp, "%c", &textfile[i]);
-		if(ch == EOF )
-			break;
-	}
-	fclose(fp);
+			printf("\t%sdit не корректен%s\n", clBoldRed, clNormal);
+			exit(1);
+		}
+	
+	
 	return;
-}*/
-
-
-
-
+}
 
 void Read(char *fname, char *textfile)
 {

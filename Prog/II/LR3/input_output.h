@@ -4,7 +4,8 @@
 #include <stdio.h>
 #include "processing.h"
 //#include "string.h"
-int input();
 
+void interrogation(char *path, char *dir);
+void Read(char *fname, char *textfile);
 
 #endif
