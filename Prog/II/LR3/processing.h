@@ -24,7 +24,6 @@ ID	Класс					Символы
 4	comment					#.*
 -1	error
 */
-
 typedef struct
 {
 	int id;
@@ -33,10 +32,5 @@ typedef struct
 } stu;
 
 int process(char *Text, char *dir, stu *Sign);
-
-
-//int update(...);
-//int process(...);
-
 
 #endif

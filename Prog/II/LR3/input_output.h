@@ -8,5 +8,6 @@
 void interrogation(char *path, char *dir);
 void Read(char *fname, char *textfile);
 void Write(char *fname, stu *sign, int count);
+void WriteCLS(stu *sign, int count);
 
 #endif

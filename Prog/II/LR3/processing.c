@@ -10,6 +10,11 @@ int Researcher(char *Str)
 		if ((7 > slen(str)) || (15 < slen(str)))
 			return 0;
 		int Z = stok(str, '.', EL);
+		if (Z != 4)
+		{
+			suntok(str, '.', EL, Z);
+			return 0;
+		}
 		for (i = 0; i < Z; ++i)
 		{
 			for (j = 0; EL[i][j] != '\0'; ++j)
@@ -43,7 +48,10 @@ int Researcher(char *Str)
 			return 0;
 		int Z = stok(str, '.', EL);
 		if (!((scmp(EL[Z - 1], d_ru) == 0) || (scmp(EL[Z - 1], d_com) == 0) || (scmp(EL[Z - 1], d_org) == 0)) )
+		{
+			suntok(str, '.', EL, Z);
 			return 0;
+		}
 		suntok(str, '.', EL, Z);
 		if (3 != Z)
 			return 0;
@@ -151,37 +159,38 @@ int SplitStr(char *text, stu *sig)
 	return count;
 }
 
+void OverwritePath(char *pat, char *dir)
+{
+	int R = 0, k, dLEN, pLEN;
+	char *TOK[MAXSIZE];
+	char *a;
+	pLEN = slen(pat);
+	dLEN = slen(dir);
+
+	R = stok(pat , '/', TOK);
+	if ((slen(TOK[0]) > 1) && (TOK[0][0] == '~'))
+	{
+//		pat = (char*)realloc(pat, pLEN + dLEN + 1);
+		for (a = pat + pLEN; a > TOK[0]; --a)
+			*(a + dLEN) = *a;
+		scpy(TOK[0], dir);
+		*(TOK[0] + dLEN) = '/';
+		for (k = 0 - 1; k < R; k++)
+			TOK[k] += dLEN;
+	}
+	suntok(pat, '/', TOK, R);
+	return;	
+}
+
 int process(char *Text, char *dir, stu *Sign)
 {
-	void OverwritePath(char *pat, char *dir)
-	{
-		int R = 0, k, dLEN, pLEN;
-		char *TOK[MAXSIZE];
-		char *a;
-		pLEN = slen(pat);
-		dLEN = slen(dir);
-
-		R = stok(pat , '/', TOK);
-		if ((slen(TOK[0]) > 1) && (TOK[0][0] == '~'))
-		{
-	//		pat = (char*)realloc(pat, pLEN + dLEN + 1);
-			for (a = pat + pLEN; a > TOK[0]; --a)
-				*(a + dLEN) = *a;
-			scpy(TOK[0], dir);
-			*(TOK[0] + dLEN) = '/';
-			for (k = 0 - 1; k < R; k++)
-				TOK[k] += dLEN;
-		}
-		suntok(pat, '/', TOK, R);
-		return;	
-	}
-	
 	int Z = SplitStr(Text, Sign);
 	
-	int i, j;
+	int i, j, k;
 	
 	for (i=0; i < Z ; i++)
 	{
+		// замена по заданию
 		if (Sign[i].id == 1)
 		{
 			if (Sign[i].value[0] == '~')
@@ -190,7 +199,7 @@ int process(char *Text, char *dir, stu *Sign)
 				OverwritePath(Sign[i].value, dir);
 			}
 		}
-		if (Sign[i].id == -1)
+/*		if (Sign[i].id == -1)
 		{
 			for (j = 0; j < Z; ++j)
 			{
@@ -200,10 +209,34 @@ int process(char *Text, char *dir, stu *Sign)
 				}
 			}
 			
+		}*/ //Убрать все в ошибочной строке. Очень грубо.
+		
+		
+		// Более аккуратно:
+		//path-у (1) должен предшествовать service&priority (0)
+		if (Sign[i].id == 1)
+		{
+			// Пропускаем пробелы/разделители
+			for (k = i - 1; (k >= 0)&&( (Sign[k].id == 3)||(Sign[k].id == 4) ); k--)
+			{
+				continue;
+			}
+			if ( (k >= 0)&&(Sign[k].id != 0) )
+				Sign[i].id = -1;
+		}
+		
+		//после service&priority (0) должен быть path (1)
+		if (Sign[i].id == 0)
+		{
+			// Пропускаем пробелы/разделители
+			for (k = i + 1; (k < Z)&&( (Sign[k].id == 3)||(Sign[k].id == 4) ); k++)
+			{
+				continue;
+			}
+			if ( (k <= Z) && (Sign[k].id != 1) )
+				Sign[i].id = -1;
 		}
 	}
-	
-	
 	return Z;
 }
 

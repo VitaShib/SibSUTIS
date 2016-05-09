@@ -63,12 +63,12 @@ int main()
 	char textfile[100000] = {"\0"};
 	stu sign[1000];
 
-//	interrogation(filepath, dir);
+	interrogation(filepath, dir);
 	
-	Read("syslog.conf", textfile);
+	Read(filepath, textfile);
 	int Z = process(textfile, dir, sign);
 //	printf("%s", textfile);
 
-	Write(   dir    , sign, Z);
+	Write(filepath, sign, Z);
 	return 0;
 }

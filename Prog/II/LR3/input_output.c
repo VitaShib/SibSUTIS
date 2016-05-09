@@ -3,7 +3,7 @@
 void interrogation(char *path, char *dir)
 {
 	int i;
-	printf(" path syslog: ");
+	printf(" file syslog: ");
 	fgets(path, MAXSIZE, stdin);
 	
 	if ((slen(path) == 1))
@@ -35,6 +35,8 @@ void interrogation(char *path, char *dir)
 			exit(1);
 		}
 	
+	if (dir[slen(dir) - 1] == '/')
+		dir[slen(dir) - 1] = '\0';
 	
 	return;
 }
@@ -57,7 +59,7 @@ void Read(char *fname, char *textfile)
 	}
 }
 
-void Write(char *fname, stu *sign, int count)
+void WriteCLS(stu *sign, int count)
 {
 	int i;
 	for (i = 0; i < count; ++i)
@@ -65,6 +67,25 @@ void Write(char *fname, stu *sign, int count)
 		if (0 <= sign[i].id)
 		{
 			printf("%s", sign[i].value);
+		}
+	}
+}
+
+void Write(char *fname, stu *sign, int count)
+{
+	FILE* f;
+	if((f = fopen(fname, "w")) == NULL)
+	{
+		perror("fopen");
+		exit(1);
+	}
+	
+	int i;
+	for (i = 0; i < count; ++i)
+	{
+		if (0 <= sign[i].id)
+		{
+			fprintf(f, "%s", sign[i].value);
 		}
 	}
 }
